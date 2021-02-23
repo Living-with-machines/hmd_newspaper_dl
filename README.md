@@ -6,11 +6,20 @@
 
 ## Install
 
-`pip install your_project_name` # TODO
+```bash
+git clone https://github.com/Living-with-machines/hmd_newspaper_dl
+```
+and then use pip install inside a virtual environment:
+
+```bash
+pip install -e .
+```
 
 ## How to use
 
-```python
+If you use pip install like this you will also have made available a console script `hmd_download`:
+
+```
 !hmd_download -h
 ```
 
