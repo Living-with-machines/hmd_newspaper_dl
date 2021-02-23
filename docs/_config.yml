@@ -1,0 +1,63 @@
+repository: Living-with-machines/hmd_newspaper_dl
+output: web
+topnav_title: hmd_newspaper_dl
+site_title: hmd_newspaper_dl
+company_name: The Alan Turing Institute, British Library Board, Queen Mary University of London, University of Exeter, University of East Anglia and University of Cambridge
+description: A CLI for downloading Heritage Made Digital Newspapers from the British Library Repository
+# Set to false to disable KaTeX math
+use_math: true
+# Add Google analytics id if you have one and want to use it here
+google_analytics:
+# See http://nbdev.fast.ai/search for help with adding Search
+google_search:
+
+host: 127.0.0.1
+# the preview server used. Leave as is.
+port: 4000
+# the port where the preview is rendered.
+
+exclude:
+  - .idea/
+  - .gitignore
+  - vendor
+ 
+exclude: [vendor]
+
+highlighter: rouge
+markdown: kramdown
+kramdown:
+ input: GFM
+ auto_ids: true
+ hard_wrap: false
+ syntax_highlighter: rouge
+
+collections:
+  tooltips:
+    output: false
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+      comments: true
+      search: true
+      sidebar: home_sidebar
+      topnav: topnav
+  -
+    scope:
+      path: ""
+      type: "tooltips"
+    values:
+      layout: "page"
+      comments: true
+      search: true
+      tooltip: true
+
+sidebars:
+- home_sidebar
+
+theme: jekyll-theme-cayman
+baseurl: /hmd_newspaper_dl/
