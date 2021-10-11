@@ -1,13 +1,13 @@
 ---
 
-title: hmd newspaper dl
+title: hmd_download
 
 
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "# TODO"
-description: "# TODO"
+summary: "Bulk download Heritage Made Digital digitised newspapers from the British Library Research Repository "
+description: "Bulk download Heritage Made Digital digitised newspapers from the British Library Research Repository "
 nb_path: "index.ipynb"
 ---
 <!--
@@ -31,7 +31,8 @@ nb_path: "index.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="TODO">TODO<a class="anchor-link" href="#TODO"> </a></h1>
+<p>This tool is intended to make it easy to bulk download <a href="https://bl.iro.bl.uk/collections/353c908d-b495-4413-b047-87236d2573e3?utf8=%E2%9C%93&amp;sort=score+desc%2C+system_create_dtsi+desc&amp;per_page=100&amp;locale=en">Heritage Made Digital Newspapers</a> from the <a href="https://www.bl.uk/">British Library</a> <a href="https://bl.iro.bl.uk/">Research Repository</a>.</p>
+
 </div>
 </div>
 </div>
@@ -62,16 +63,6 @@ nb_path: "index.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>hmd_download -h
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -84,13 +75,12 @@ nb_path: "index.ipynb"
 Download HMD newspaper from iro to `save_dir` using `n_threads`
 
 positional arguments:
-  save_dir              Output Directory
+  save_dir               Output Directory
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --n_threads N_THREADS
-                        Number threads to use (default: 8)
-  --subset SUBSET       Download subset of HMD
+  -h, --help             show this help message and exit
+  --n_threads N_THREADS  Number threads to use (default: 8)
+  --subset SUBSET        Download subset of HMD
 </pre>
 </div>
 </div>

@@ -30,41 +30,47 @@ from tqdm import tqdm
 
 # Cell
 def _get_link(x: str):
-    end = str(x).split('"')[3]
-    return "https://bl.iro.bl.uk" + end
+    end = x.split('/')[-1]
+    return "https://bl.iro.bl.uk/concern/datasets/" + end
 
 # Cell
 @lru_cache(256)
 def get_newspaper_links():
-    urls = [f"https://bl.iro.bl.uk/collection/353c908d-b495-4413-b047-87236d2573e3?page={page}" for page in range(1, 3)]
+    urls = [f"https://bl.iro.bl.uk/collections/353c908d-b495-4413-b047-87236d2573e3?locale=en&page={page}" for page in range(1, 3)]
     link_tuples = []
     for url in urls:
         r = requests.get(url)
         r.raise_for_status()
         soup = BeautifulSoup(r.text, 'lxml')
-        links = soup.find_all("h3", class_="title_title__2nRVt")
+        links = soup.find_all("p", class_="media-heading",)
         for link in links:
-            t = (link.text, _get_link(link))
-            link_tuples.append(t)
+            link = link.find("a")
+            url = link['href']
+            if url:
+                t = (link.text, _get_link(url))
+                link_tuples.append(t)
         return link_tuples
 
 # Cell
 @lru_cache(256)
 def get_download_urls(url: str) -> list:
     """Given a dataset page on the IRO repo return all download links for that page"""
+    data, urls = None, None
     try:
         r = requests.get(url, timeout=30)
     except requests.exceptions.MissingSchema as E:
         print(E)
-    try:
-        soup = BeautifulSoup(r.text, "lxml")
-        data = json.loads(soup.find("script", type="application/ld+json").string)
-    except AttributeError as E:
-        print(E)
-    if data:
-        data = data["distribution"]
-        urls = [item["contentUrl"] for item in data]
-    return urls
+
+    soup = BeautifulSoup(r.text, "lxml")
+    link_ends =  soup.find_all('a', id='file_download')
+    urls = ["https://bl.iro.bl.uk" + link['href'] for link in link_ends]
+        #data = json.loads(soup.find("script", type="application/ld+json").string)
+    # except AttributeError as E:
+    #     print(E)
+    # if data:
+    #     #data = data["distribution"]
+    #     #urls = [item["contentUrl"] for item in data]
+    return list(set(urls))
 
 # Cell
 def create_session() -> requests.sessions.Session:
@@ -126,13 +132,14 @@ def download_from_urls(urls: List[str], save_dir: Union[str, Path], n_threads: i
 def cli(
     save_dir: Param("Output Directory", str),
     n_threads: Param("Number threads to use") = 8,
-    subset: Param("Download subset of HMD", Union[int]) = None
+    subset: Param("Download subset of HMD", Optional[int]) = None
 ):
     "Download HMD newspaper from iro to `save_dir` using `n_threads`"
     logger.info("Getting title urls")
     title_urls = get_newspaper_links()
     logger.info(f"Found {len(title_urls)} title urls")
     all_urls = []
+    print(title_urls)
     for url in title_urls:
         logger.info(f"Getting zip download file urls for {url}")
         try:
@@ -142,6 +149,8 @@ def cli(
             logger.error(e)
     all_urls = list(itertools.chain(*all_urls))
     if subset:
+        if len(all_urls) < subset:
+            raise ValueError(f"Size of requested sample {subset} is larger than total number of urls:{all_urls}")
         all_urls = random.sample(all_urls, subset)
     print(all_urls)
     download_count = download_from_urls(all_urls, save_dir, n_threads=n_threads)
