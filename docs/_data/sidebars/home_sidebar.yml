@@ -10,7 +10,7 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: hmd_dl
+      title: hmd_newspaper_dl
       url: core.html
     output: web
     title: hmd_newspaper_dl
