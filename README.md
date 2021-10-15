@@ -41,3 +41,5 @@ Once you have installed the packaghe you will also have made available a console
       --n_threads N_THREADS  Number threads to use (default: 8)
       --subset SUBSET        Download subset of HMD
 
+
+This will by default download all available newspaper titles. If you just want a subset you can pass in a subset parameter. 
