@@ -36,6 +36,7 @@ def _get_link(x: str):
 # Cell
 @lru_cache(256)
 def get_newspaper_links():
+    """Returns titles from the Newspaper Collection"""
     urls = [f"https://bl.iro.bl.uk/collections/353c908d-b495-4413-b047-87236d2573e3?locale=en&page={page}" for page in range(1, 3)]
     link_tuples = []
     for url in urls:
@@ -89,7 +90,8 @@ def _download(url: str, dir: Union[str, Path]):
     try:
         r = s.get(url, stream=True, timeout=(30))
         r.raise_for_status()
-        fname = r.headers["Content-Disposition"].split('"')[1]
+        #fname = r.headers["Content-Disposition"].split('_')[1]
+        fname = "_".join(r.headers["Content-Disposition"].split('"')[1].split("_")[0:5])
         if fname:
             with open(f"{dir}/{fname}", "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):
@@ -102,6 +104,7 @@ def _download(url: str, dir: Union[str, Path]):
 
 # Cell
 def download_from_urls(urls: List[str], save_dir: Union[str, Path], n_threads: int = 8):
+    """Downloads from an input lists of `urls` and saves to `save_dir`, option to set `n_threads` default = 8"""
     download_count = 0
     tic = time.perf_counter()
     Path(save_dir).mkdir(exist_ok=True)
@@ -132,7 +135,7 @@ def download_from_urls(urls: List[str], save_dir: Union[str, Path], n_threads: i
 def cli(
     save_dir: Param("Output Directory", str),
     n_threads: Param("Number threads to use") = 8,
-    subset: Param("Download subset of HMD", Optional[int]) = None
+    subset: Param("Download subset of HMD", int,opt=True) = None
 ):
     "Download HMD newspaper from iro to `save_dir` using `n_threads`"
     logger.info("Getting title urls")
