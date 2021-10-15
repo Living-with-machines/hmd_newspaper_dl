@@ -42,4 +42,8 @@ Once you have installed the packaghe you will also have made available a console
       --subset SUBSET        Download subset of HMD
 
 
-This will by default download all available newspaper titles. If you just want a subset you can pass in a subset parameter. 
+This will by default download all available newspaper titles. If you just want a subset you can pass in a subset parameter to specify how many titles you want. At the moment this is just a random selection. 
+
+## Feedback 
+
+This tool was put together for internal Living with Machines but is shared in case it is helpful for other people. If you have feedback, problems or want to suggest changes please open a [new issue](https://github.com/Living-with-machines/hmd_newspaper_dl/issues/new/choose). 
