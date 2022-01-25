@@ -92,6 +92,7 @@ def create_session() -> requests.sessions.Session:
 
 # Cell
 def _download(url: str, dir: Union[str, Path]):
+    time.sleep(10)
     fname = None
     s = create_session()
     try:
@@ -110,7 +111,7 @@ def _download(url: str, dir: Union[str, Path]):
     return fname
 
 # Cell
-def download_from_urls(urls: List[str], save_dir: Union[str, Path], n_threads: int = 8):
+def download_from_urls(urls: List[str], save_dir: Union[str, Path], n_threads: int = 4):
     """Downloads from an input lists of `urls` and saves to `save_dir`, option to set `n_threads` default = 8"""
     download_count = 0
     tic = time.perf_counter()
