@@ -146,39 +146,49 @@ def cli(
     save_dir: Param("Output Directory", str),
     n_threads: Param("Number threads to use") = 8,
     subset: Param("Download subset of HMD", int, opt=True) = None,
+    url: Param("Download from a specific URL", str, opt=True) = None,
 ):
     "Download HMD newspaper from iro to `save_dir` using `n_threads`"
-    logger.info("Getting title urls")
-    title_urls = get_newspaper_links()
-    logger.info(f"Found {len(title_urls)} title urls")
-    all_urls = []
-    print(title_urls)
-    for url in title_urls:
+    if url is not None:
         logger.info(f"Getting zip download file urls for {url}")
         try:
-            zip_urls = get_download_urls(url[1])
-            all_urls.append(zip_urls)
+            zip_urls = get_download_urls(url)
+            print(zip_urls)
         except Exception as e:
             logger.error(e)
-    all_urls = list(itertools.chain(*all_urls))
-    if subset:
-        if len(all_urls) < subset:
-            raise ValueError(
-                f"Size of requested sample {subset} is larger than total number of urls:{all_urls}"
+        download_count = download_from_urls(zip_urls, save_dir, n_threads=n_threads)
+    else:
+        logger.info("Getting title urls")
+        title_urls = get_newspaper_links()
+        logger.info(f"Found {len(title_urls)} title urls")
+        all_urls = []
+        print(title_urls)
+        for url in title_urls:
+            logger.info(f"Getting zip download file urls for {url}")
+            try:
+                zip_urls = get_download_urls(url[1])
+                all_urls.append(zip_urls)
+            except Exception as e:
+                logger.error(e)
+        all_urls = list(itertools.chain(*all_urls))
+        if subset:
+            if len(all_urls) < subset:
+                raise ValueError(
+                    f"Size of requested sample {subset} is larger than total number of urls:{all_urls}"
+                )
+            all_urls = random.sample(all_urls, subset)
+        print(all_urls)
+        download_count = download_from_urls(all_urls, save_dir, n_threads=n_threads)
+        request_url_count = len(all_urls)
+        if request_url_count == download_count:
+            logger.info(
+                f"\U0001F600 Requested count of urls: {request_url_count} matches number downloaded: {download_count}"
             )
-        all_urls = random.sample(all_urls, subset)
-    print(all_urls)
-    download_count = download_from_urls(all_urls, save_dir, n_threads=n_threads)
-    request_url_count = len(all_urls)
-    if request_url_count == download_count:
-        logger.info(
-            f"\U0001F600 Requested count of urls: {request_url_count} matches number downloaded: {download_count}"
-        )
-    if request_url_count > download_count:
-        logger.warning(
-            f"\U0001F622 Requested count of urls: {request_url_count} higher than number downloaded: {download_count}"
-        )
-    if request_url_count < download_count:
-        logger.warning(
-            f"\U0001F937 Requested count of urls: {request_url_count} lower than number downloaded: {download_count}"
-        )
+        if request_url_count > download_count:
+            logger.warning(
+                f"\U0001F622 Requested count of urls: {request_url_count} higher than number downloaded: {download_count}"
+            )
+        if request_url_count < download_count:
+            logger.warning(
+                f"\U0001F937 Requested count of urls: {request_url_count} lower than number downloaded: {download_count}"
+            )

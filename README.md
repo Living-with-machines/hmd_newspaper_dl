@@ -1,4 +1,3 @@
-
 # hmd_download
 > Bulk download Heritage Made Digital digitised newspapers from the British Library Research Repository 
 
