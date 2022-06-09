@@ -47,12 +47,9 @@ def get_newspaper_links():
         r = requests.get(url)
         r.raise_for_status()
         soup = BeautifulSoup(r.text, "lxml")
-        links = soup.find_all(
-            "p",
-            class_="media-heading",
-        )
+        links = soup.select(".hyc-container > .hyc-bl-results a[id*=src_copy_link]")
+
         for link in links:
-            link = link.find("a")
             url = link["href"]
             if url:
                 t = (link.text, _get_link(url))
