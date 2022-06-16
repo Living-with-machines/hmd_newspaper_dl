@@ -5,13 +5,10 @@ __all__ = ['get_newspaper_links', 'get_download_urls', 'create_session', 'downlo
 # Cell
 import concurrent
 import itertools
-import json
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 import random
-import sys
 import time
-from collections import namedtuple
 from functools import lru_cache
 from operator import itemgetter
 
@@ -88,7 +85,7 @@ def create_session() -> requests.sessions.Session:
     return session
 
 # Cell
-def _download(url: str, dir: Union[str, Path]):
+def _download(url: str, dir: Union[str, Path]=None, return_filename_only: bool=False):
     time.sleep(10)
     fname = None
     s = create_session()
@@ -97,6 +94,8 @@ def _download(url: str, dir: Union[str, Path]):
         r.raise_for_status()
         # fname = r.headers["Content-Disposition"].split('_')[1]
         fname = "_".join(r.headers["Content-Disposition"].split('"')[1].split("_")[0:5])
+        if fname and return_filename_only:
+            return fname
         if fname:
             with open(f"{dir}/{fname}", "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):
