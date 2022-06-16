@@ -85,8 +85,9 @@ def create_session() -> requests.sessions.Session:
     return session
 
 # Cell
-def _download(url: str, dir: Union[str, Path]=None, return_filename_only: bool=False):
-    time.sleep(10)
+def _download(url: str, dir: Union[str, Path]=None, return_filename_only: bool=False, sleepy=True):
+    if sleepy: # This is to avoid hammering the BL repository with too many requests
+        time.sleep(10)
     fname = None
     s = create_session()
     try:
